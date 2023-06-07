@@ -35,23 +35,23 @@ TEST(findMinDestroyedTests, findMinDestroyedTest_g3) {
     EXPECT_EQ(result, 4);
 }
 
-TEST(findMinDestroyedTests, findMinDestroyedTest_g4) {
+TEST(findMinDestroyedTests2, findMinDestroyedTest_g4) {
     std::fstream inputFile;
     inputFile.open(R"(../input/g4.txt)");
     if(!inputFile.is_open()) exit(-11);
     std::chrono::duration<double, std::milli> duration{};
-    int result = measureTime<int, Graph>(&findMinDestroyed, createGraphFromIstream(inputFile), &duration);
+    int result = measureTime<int, Graph>(&findMinDestroyed, createGraphFromIstream2(inputFile), &duration);
     std::cout<<::testing::UnitTest::GetInstance()->current_test_info()->name()
              <<" finished after: "<<duration.count()<<"ms\n";
     EXPECT_EQ(result, 1);
 }
 
-TEST(findMinDestroyedTests, findMinDestroyedTest_pegaz) {
+TEST(findMinDestroyedTests2, findMinDestroyedTest_pegaz) {
     std::fstream inputFile;
     inputFile.open(R"(../input/pegaz.txt)");
     if (!inputFile.is_open()) exit(-11);
     std::chrono::duration<double, std::milli> duration{};
-    int result = measureTime<int, Graph>(&findMinDestroyed, createGraphFromIstream(inputFile), &duration);
+    int result = measureTime<int, Graph>(&findMinDestroyed, createGraphFromIstream2(inputFile), &duration);
     std::cout<<::testing::UnitTest::GetInstance()->current_test_info()->name()
              <<" finished after: "<<duration.count()<<"ms\n";
     EXPECT_EQ(result, 2);

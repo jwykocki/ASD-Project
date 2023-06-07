@@ -23,6 +23,7 @@ void BFSsearch(Graph G, int vert, int * visited);
 int findMinDestroyed(Graph g);
 bool parseInt(const char *str, int *n);
 Graph createGraphFromIstream(std::istream& myfile);
+Graph createGraphFromIstream2(std::istream& myfile);
 
 
 #endif //SAFESPROJECT_FUNCTIONS_H

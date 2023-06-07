@@ -25,7 +25,7 @@ int findMinDestroyed(Graph g) {
     int destroyed = 0;
     int gsize = g.getSize();
     int opened[gsize];
-    std::map<int, size_t, std::greater<>> toOpen;
+    std::vector<std::pair<size_t, int>> toOpen;
 
     for(int j=0; j<gsize; j++){
         opened[j] = 0;
@@ -53,23 +53,28 @@ int findMinDestroyed(Graph g) {
 
         if(destroy){
             destroyed++;
+            std::cout<<"zwiekszam1\n";
             BFSsearch(g, i, opened);
         }else{
-            std::pair<int, size_t> p;
-            p.second =  g.outConnections(i).size();
-            p.first = i; //klucz
-            toOpen.insert(p);
+            std::pair<size_t, int> p;
+            p.second = i;
+            p.first = g.outConnections(i).size(); //klucz
+            toOpen.push_back(p);
         }
     }
 
-//    wierzcholki w mapie sa posortowane malejaco od najwiekszej liczby outConnections (sa najbardziej
+
+
+    sort(toOpen.begin(), toOpen.end(), std::greater<>());
+    //    wierzcholki w vectorze sa posortowane malejaco od najwiekszej liczby outConnections (sa najbardziej
 //    oplacalne do rozbicia wiec bedzie to najlepsza opcja
 
     for(auto pair : toOpen){
-        int i = pair.first;
-
+        int i = pair.second;
+        std::cout<<"mapa "<<i<<"\n";
         if(opened[i]==0){
             destroyed++;
+            std::cout<<"zwiekszam  "<<i<<"\n";
             BFSsearch(g, i, opened);
         }
     }
@@ -132,5 +137,48 @@ Graph createGraphFromIstream(std::istream& myfile){
         graph.addEdge(i, n-1);
         s.clear();
     }
+    return graph;
+}
+
+Graph createGraphFromIstream2(std::istream& myfile){
+
+    std::string s;
+    getline(myfile, s);
+    int numVertices;
+    if(!parseInt(s.c_str(), &numVertices)){
+        exit( -1);
+    }
+    s.clear();
+    if(numVertices<0) exit(-1);
+    //stworz graf
+    Graph graph(numVertices);
+
+
+        getline(myfile, s);
+        char separator = ' ';
+        int j = 0;
+        int safe = 0;
+        int n;
+        // Temporary string used to split the string.
+        std::string tempS;
+        while (s[j] != '\0') {
+            if (s[j] != separator) {
+                // Append the char to the temp string.
+                tempS += s[j];
+            } else {
+                if(!parseInt(tempS.c_str(), &n)) exit(-1);
+                if(n<1 || n>numVertices) exit(-1);
+                std::cout<<"n = "<<n<<"\n";
+                graph.addEdge(n-1, safe);
+                tempS.clear();
+                safe++;
+            }
+            j++;
+        }
+        if(!parseInt(tempS.c_str(), &n)) exit(-1);
+        if(n<1 || n>numVertices) exit(-1);
+        graph.addEdge(n-1, safe);
+        s.clear();
+
     return graph;
 }
