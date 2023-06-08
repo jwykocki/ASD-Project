@@ -21,6 +21,31 @@ void BFSsearch(Graph G, int vert, int * visited){
     }
 }
 
+int BFSsearchCounter(Graph G, int vert, int * visited){
+    int counter = 0;
+    visited[vert] = 1; // oznaczamy wierzchołek s jako odwiedzony
+    counter++;
+    std::queue<int> q;
+    q.push(vert); // wstawiamy s do kolejki
+    int n = G.getSize();
+
+    while (!q.empty()) {
+        int v = q.front(); // bierzemy pierwszy element z kolejki
+        q.pop();
+
+        for (int i = 0; i < n; i++) {
+            if (G.hasEdge(v, i)) {
+                if(visited[i]==0) {
+                    visited[i] = 1; // oznaczamy wierzchołek i jako odwiedzony
+                    counter++;
+                    q.push(i); // wstawiamy i do kolejki
+                }
+            }
+        }
+    }
+    return counter;
+}
+
 int findMinDestroyed(Graph g) {
     int destroyed = 0;
     int gsize = g.getSize();
@@ -53,7 +78,7 @@ int findMinDestroyed(Graph g) {
 
         if(destroy){
             destroyed++;
-            std::cout<<"zwiekszam1\n";
+            //std::cout<<"dodaje sejf "<<destroyed<<"\n";
             BFSsearch(g, i, opened);
         }else{
             std::pair<size_t, int> p;
@@ -66,18 +91,84 @@ int findMinDestroyed(Graph g) {
 
 
     sort(toOpen.begin(), toOpen.end(), std::greater<>());
+
+    int currOpened[gsize];
+    for(int j=0; j<gsize; j++){
+        currOpened[j] = 0;
+    }
+
     //    wierzcholki w vectorze sa posortowane malejaco od najwiekszej liczby outConnections (sa najbardziej
-//    oplacalne do rozbicia wiec bedzie to najlepsza opcja
+    //    oplacalne do rozbicia wiec bedzie to najlepsza opcja
 
     for(auto pair : toOpen){
+        //std::cout<<"rozmiar : "<<pair.first<<"\n";
         int i = pair.second;
-        std::cout<<"mapa "<<i<<"\n";
+        //std::cout<<"mapa "<<i<<"\n";
         if(opened[i]==0){
             destroyed++;
-            std::cout<<"zwiekszam  "<<i<<"\n";
+            //std::cout<<"potem zwiekszam  "<<destroyed<<"\n";
             BFSsearch(g, i, opened);
         }
     }
+    return destroyed;
+}
+
+int findMinDestroyed2(Graph g) {
+    int destroyed = 0;
+    int gsize = g.getSize();
+    int opened[gsize];
+    int currOpened[gsize];
+    int left = gsize;
+    for(int j=0; j<gsize; j++){
+        opened[j] = 0;
+        currOpened[j] = 0;
+    }
+
+    //trzeba zniszczyc
+    //1) te ktore nie maja inConnection albo maja tylko od siebie
+    //2) cykle zamkniete - czyli bierzemy po koeli wierzcholki i ich out connection dodajemy do otwartych
+
+    for(int i=0; i<gsize; ++i){
+
+        if(opened[i]==1) { /*jest wsrod otwartych*/
+            continue;
+        }
+
+        bool destroy = false;
+        std::set<int> inConn = g.inConnections(i);
+
+        if(inConn.size()==1 && inConn.count(i)==1) { /*jego jedyne inConection idze od niego samego*/
+            destroy = true;
+        }else if(inConn.empty()) { /*nie ma zadnych inConenction*/
+            destroy = true;
+        }
+
+        //jesli spelnial ktorys z warunkow, musi na pewno zostac zniszczony
+
+        if(destroy){
+            destroyed++;
+            //std::cout<<"zwiekszam1\n";
+            int c = BFSsearchCounter(g, i, opened);
+            left -= c;
+        }
+    }
+
+    std::vector<std::pair<int, int>> values;
+    for(int i=0; i<gsize; ++i){
+        if(opened[i]==1 || currOpened[i]==1 ) continue;
+        values.emplace_back(BFSsearchCounter(g, i, currOpened), i);
+    }
+
+    sort(values.begin(), values.end(), std::greater<>()); //posortuj wierzcholki od liczby otworzonych przez nie sejfow
+
+    for(int i=0; left>0; i++){
+        std::pair<int, int> p = values[i];
+        if(opened[p.second]==1) continue;
+        destroyed++;
+        int c = BFSsearchCounter(g, p.second, opened);
+        left-=c;
+    }
+
     return destroyed;
 }
 
@@ -127,14 +218,14 @@ Graph createGraphFromIstream(std::istream& myfile){
             } else {
                 if(!parseInt(tempS.c_str(), &n)) exit(-1);
                 if(n<1 || n>numVertices) exit(-1);
-                graph.addEdge(i, n-1);
+                graph.addEdge(n-1, i);
                 tempS.clear();
             }
             j++;
         }
         if(!parseInt(tempS.c_str(), &n)) exit(-1);
         if(n<1 || n>numVertices) exit(-1);
-        graph.addEdge(i, n-1);
+        graph.addEdge(n-1, i);
         s.clear();
     }
     return graph;

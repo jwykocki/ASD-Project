@@ -12,7 +12,7 @@ int main(int args, char *argv[])
         fstream inputFile;
         inputFile.open(path);
         if(!inputFile.is_open()) exit(-11);
-        graph = createGraphFromIstream2(inputFile);
+        graph = createGraphFromIstream(inputFile);
     }else{
         cout<<R"(Nie znaleziono sciezki do pliku wejsciowego jako argumentu wywolania programu, podaj parametry zadania w formacie:
             pierwsza linia: liczba sejfow
