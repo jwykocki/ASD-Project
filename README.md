@@ -10,4 +10,4 @@ Przykładowe wejście do programu może składać się z jeden liczby n oznaczaj
 4  
 2 1 2 4
 
-Oznacza to, że są 4 sejfy. Klucz do pierwszego sejfu znajduje się w sejfie 2 (2 na pozycji pierwszej), do drugiego w sejfie 1 (1 na pozycji drugiej), do 3 w sejfie 2 itd. Dla takiego wejścia, prawidłowa odpowiedź to 2 (trzeba zniszczyć sejfy 3 i 4).
+Oznacza to, że są 4 sejfy. Klucz do pierwszego sejfu znajduje się w sejfie 2 (2 na pozycji pierwszej), do drugiego w sejfie 1 (1 na pozycji drugiej), do 3 w sejfie 2 itd. Dla takiego wejścia, prawidłowa odpowiedź to 2 (trzeba zniszczyć sejfy 1 i 4).
