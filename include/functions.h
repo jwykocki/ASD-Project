@@ -24,7 +24,7 @@ int findMinDestroyed(Graph g);
 int findMinDestroyed2(Graph g);
 bool parseInt(const char *str, int *n);
 Graph createGraphFromIstream(std::istream& myfile);
-Graph createGraphFromIstream2(std::istream& myfile);
+Graph createGraphFromIstreamOneLine(std::istream& myfile);
 
 
 #endif //SAFESPROJECT_FUNCTIONS_H

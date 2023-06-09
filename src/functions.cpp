@@ -46,73 +46,6 @@ int BFSsearchCounter(Graph G, int vert, int * visited){
     return counter;
 }
 
-int findMinDestroyed(Graph g) {
-    int destroyed = 0;
-    int gsize = g.getSize();
-    int opened[gsize];
-    std::vector<std::pair<size_t, int>> toOpen;
-
-    for(int j=0; j<gsize; j++){
-        opened[j] = 0;
-    }
-
-    //trzeba zniszczyc
-    //1) te ktore nie maja inConnection albo maja tylko od siebie
-    //2) cykle zamkniete - czyli bierzemy po koeli wierzcholki i ich out connection dodajemy do otwartych
-
-    for(int i=0; i<gsize; i++){
-        bool destroy = false;
-        std::set<int> inConn = g.inConnections(i);
-
-        if(opened[i]==1) { /*nie ma go wsrod otwartych*/
-            continue;
-        }
-
-        if(inConn.size()==1 && inConn.count(i)==1) { /*jego jedyne inConection idze od niego samego*/
-            destroy = true;
-        }else if(inConn.empty()) { /*nie ma zadnych inConenction*/
-            destroy = true;
-        }
-
-        //jesli spelnial ktorys z warunkow, musi na pewno zostac zniszczony
-
-        if(destroy){
-            destroyed++;
-            //std::cout<<"dodaje sejf "<<destroyed<<"\n";
-            BFSsearch(g, i, opened);
-        }else{
-            std::pair<size_t, int> p;
-            p.second = i;
-            p.first = g.outConnections(i).size(); //klucz
-            toOpen.push_back(p);
-        }
-    }
-
-
-
-    sort(toOpen.begin(), toOpen.end(), std::greater<>());
-
-    int currOpened[gsize];
-    for(int j=0; j<gsize; j++){
-        currOpened[j] = 0;
-    }
-
-    //    wierzcholki w vectorze sa posortowane malejaco od najwiekszej liczby outConnections (sa najbardziej
-    //    oplacalne do rozbicia wiec bedzie to najlepsza opcja
-
-    for(auto pair : toOpen){
-        //std::cout<<"rozmiar : "<<pair.first<<"\n";
-        int i = pair.second;
-        //std::cout<<"mapa "<<i<<"\n";
-        if(opened[i]==0){
-            destroyed++;
-            //std::cout<<"potem zwiekszam  "<<destroyed<<"\n";
-            BFSsearch(g, i, opened);
-        }
-    }
-    return destroyed;
-}
-
 int findMinDestroyed2(Graph g) {
     int destroyed = 0;
     int gsize = g.getSize();
@@ -123,10 +56,6 @@ int findMinDestroyed2(Graph g) {
         opened[j] = 0;
         currOpened[j] = 0;
     }
-
-    //trzeba zniszczyc
-    //1) te ktore nie maja inConnection albo maja tylko od siebie
-    //2) cykle zamkniete - czyli bierzemy po koeli wierzcholki i ich out connection dodajemy do otwartych
 
     for(int i=0; i<gsize; ++i){
 
@@ -147,7 +76,6 @@ int findMinDestroyed2(Graph g) {
 
         if(destroy){
             destroyed++;
-            //std::cout<<"zwiekszam1\n";
             int c = BFSsearchCounter(g, i, opened);
             left -= c;
         }
@@ -231,7 +159,7 @@ Graph createGraphFromIstream(std::istream& myfile){
     return graph;
 }
 
-Graph createGraphFromIstream2(std::istream& myfile){
+Graph createGraphFromIstreamOneLine(std::istream& myfile){
 
     std::string s;
     getline(myfile, s);
@@ -259,7 +187,6 @@ Graph createGraphFromIstream2(std::istream& myfile){
             } else {
                 if(!parseInt(tempS.c_str(), &n)) exit(-1);
                 if(n<1 || n>numVertices) exit(-1);
-                std::cout<<"n = "<<n<<"\n";
                 graph.addEdge(n-1, safe);
                 tempS.clear();
                 safe++;

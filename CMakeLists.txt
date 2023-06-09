@@ -12,7 +12,7 @@ set(SOURCE_FILES
         src/functions.cpp src/Graph.cpp)
 
 set(TEST_SOURCES
-        test/main_test.cpp test/basic_tests.cpp test/large_tests.cpp)
+        test/main_test.cpp test/basic_tests.cpp test/large_tests.cpp test/my_tests.cpp)
 
 add_subdirectory(googletest-main)
 link_libraries(gmock)
