@@ -49,38 +49,38 @@ int BFSsearchCounter(Graph G, int vert, int * visited){
 int findMinDestroyed2(Graph g) {
     int destroyed = 0;
     int gsize = g.getSize();
-    int opened[gsize];
-    int currOpened[gsize];
-    int left = gsize;
+        if(gsize<1) return 0;
+    int opened[gsize]; //tablica zapisujaca odwiedzone wierzcholki grafu
+    int currOpened[gsize]; //tablica zapisujaca odwiedzone wierzcholki grafu podczas przeszukiwania BFS
+    int left = gsize; //liczba wierzcholkow ktora zostala do odwiedzenia
+
     for(int j=0; j<gsize; j++){
         opened[j] = 0;
         currOpened[j] = 0;
     }
 
+    //przejdz przez wszystkie sejfy i zniszcz ktore musza byc zniszczone (maja klucz do siebie)
     for(int i=0; i<gsize; ++i){
 
         if(opened[i]==1) { /*jest wsrod otwartych*/
             continue;
         }
 
-        bool destroy = false;
         std::set<int> inConn = g.inConnections(i);
-
         if(inConn.size()==1 && inConn.count(i)==1) { /*jego jedyne inConection idze od niego samego*/
-            destroy = true;
-        }else if(inConn.empty()) { /*nie ma zadnych inConenction*/
-            destroy = true;
-        }
-
-        //jesli spelnial ktorys z warunkow, musi na pewno zostac zniszczony
-
-        if(destroy){
             destroyed++;
             int c = BFSsearchCounter(g, i, opened);
             left -= c;
         }
+
+        //nie ma takiej sytuacji - do kazdego sejfu musi byc gdzies klucz ?
+        //        }else if(inConn.empty()) { /*nie ma zadnych inConenction*/
+        //            destroy = true;
+        //        }
+
     }
 
+    //z tych ktore pozostaly - policz jakie otowrza najwiecej sejfow - i wsadz je do vectora
     std::vector<std::pair<int, int>> values;
     for(int i=0; i<gsize; ++i){
         if(opened[i]==1 || currOpened[i]==1 ) continue;
@@ -89,11 +89,13 @@ int findMinDestroyed2(Graph g) {
 
     sort(values.begin(), values.end(), std::greater<>()); //posortuj wierzcholki od liczby otworzonych przez nie sejfow
 
+    //az wszystkie nie zostana odwiedzone przechodz graf w kolejnosci z vectora
     for(int i=0; left>0; i++){
-        std::pair<int, int> p = values[i];
-        if(opened[p.second]==1) continue;
+        int ix = values[i].second;
+       // std::pair<int, int> p = values[i];
+        if(opened[ix]==1) continue;
         destroyed++;
-        int c = BFSsearchCounter(g, p.second, opened);
+        int c = BFSsearchCounter(g, ix, opened);
         left-=c;
     }
 

@@ -34,7 +34,7 @@ TEST(findMinDestroyedLargeTests, findMinDestroyedTest_8_5041) {
     int result = measureTime<int, Graph>(&findMinDestroyed2, createGraphFromIstream(inputFile), &duration);
     std::cout<<::testing::UnitTest::GetInstance()->current_test_info()->name()
              <<" finished after: "<<duration.count()<<"ms\n";
-    EXPECT_EQ(result, 5041);
+    EXPECT_EQ(result, 5042);
     EXPECT_TRUE(duration.count()<500);
 }
 

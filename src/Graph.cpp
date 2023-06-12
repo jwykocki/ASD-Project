@@ -73,6 +73,8 @@ void Graph::printMatrix(){
 }
 
 Graph::Graph(int numVert){ //liczba wierzcholkow
+    if(numVert<1) exit(2);
+
     int i, j;
     A = new bool * [numVert];  // Tworzymy tablicę wskaźników
 
