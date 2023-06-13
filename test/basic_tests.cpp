@@ -2,8 +2,6 @@
 #include "functions.h"
 #include "Graph.h"
 
-//TODO: zrobic plik wyjsciowy test_results.txt
-
 TEST(findMinDestroyedBasicTests, findMinDestroyedTest_3_3) {
     std::fstream inputFile;
     inputFile.open(R"(../input/basic_tests/3_3.txt)");

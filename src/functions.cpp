@@ -45,8 +45,9 @@ int BFSsearchCounter(Graph G, int vert, int * visited){
     }
     return counter;
 }
-
+//Funkcja szukajaca najmniejszej  liczby rozbitych sejfow
 int findMinDestroyed2(Graph g) {
+    std::cout<<"TEST\n";
     int destroyed = 0;
     int gsize = g.getSize();
         if(gsize<1) return 0;
@@ -92,7 +93,6 @@ int findMinDestroyed2(Graph g) {
     //az wszystkie nie zostana odwiedzone przechodz graf w kolejnosci z vectora
     for(int i=0; left>0; i++){
         int ix = values[i].second;
-       // std::pair<int, int> p = values[i];
         if(opened[ix]==1) continue;
         destroyed++;
         int c = BFSsearchCounter(g, ix, opened);
